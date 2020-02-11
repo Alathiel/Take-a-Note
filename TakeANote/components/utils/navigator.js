@@ -8,11 +8,13 @@ import NavigationService from './NavigationService';
 //screens
 import Home from '../screens/Home';
 import AddNote from '../screens/AddNote';
+import ShowNote from '../screens/ShowNote';
 
 const AppStack = createStackNavigator(
   {
     Home: Home,
     AddNote: AddNote,
+    ShowNote: ShowNote,
   },
 );
 
@@ -29,17 +31,7 @@ const AppStack = createStackNavigator(
 //   );
 
 //create external navigator
-const AppContainer = createAppContainer(
-  createStackNavigator(
-    {
-        AppStack:AppStack,
-    },
-    {
-      initialRouteName:'AppStack',
-      headerMode: 'none',
-    },
-  ),
-);
+const AppContainer = createAppContainer(AppStack);
 
 export default class Navigator extends React.Component {
   render() {

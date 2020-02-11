@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 import React from 'react';
-import {View,ScrollView,TouchableWithoutFeedback,FlatList} from 'react-native';
+import {View,ScrollView,TouchableWithoutFeedback,FlatList,TouchableOpacity,BackHandler} from 'react-native';
 import {Icon,Text} from 'react-native-elements';
 import BackgroundTimer from 'react-native-background-timer';
 import NavigationService from '../utils/NavigationService';
@@ -18,6 +18,7 @@ export default class Home extends React.Component {
             reload:0,
         };
         this.props.navigation.addListener('willFocus', () => {
+            BackHandler.addEventListener('hardwareBackPress', this.handleBackButton);
             this.getNotes();
         });
         this.props.navigation.addListener('didFocus', () => {
@@ -49,6 +50,10 @@ export default class Home extends React.Component {
     componentWillMount(){ //first load
         const timeoutId = BackgroundTimer.setTimeout(() => {this.getNotes();}, 200);
         const timeoutId2 = BackgroundTimer.setTimeout(() => {this.getNotes();}, 1000);
+    }
+
+    handleBackButton(){
+        BackHandler.exitApp();
     }
 
     getNotes(){
@@ -88,13 +93,13 @@ export default class Home extends React.Component {
                 <FlatList data={datas} numColumns={2} keyExtractor={(item, index) => index.toString()}
                 renderItem={({item}) => (
                     <View style={{ flex: 1, flexDirection: 'column', margin: 1 }}>
-                        <TouchableWithoutFeedback onPress={() => this.props.navigation.navigate('ProductsView',{category: item.category})}
+                        <TouchableOpacity onPress={() => this.props.navigation.navigate('ShowNote',{id: item.id})}
                         onLongPress={() => this.setState({options:true})}>
-                            <View>
-                                <View style={styles.title_note}><Text>{item.title}</Text></View>
-                                <View style={styles.content_note}><Text>{item.title}</Text></View>
+                            <View style={{borderWidth:1,borderColor:'grey',borderRadius:10,margin:5}}>
+                                <View style={styles.title_note}><Text style={{fontSize:25}}>{item.title}</Text></View>
+                                <View style={styles.content_note}><Text style={{fontSize:17}}>{item.content}</Text></View>
                             </View>
-                        </TouchableWithoutFeedback>
+                        </TouchableOpacity>
                     </View>
                 )}/>
             );

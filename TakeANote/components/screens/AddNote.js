@@ -2,13 +2,12 @@
 import React from 'react';
 import {View,TextInput} from 'react-native';
 import {Button} from 'react-native-elements';
-import NavigationService from '../utils/NavigationService';
 import styles from './Styles';
 import SQLite from 'react-native-sqlite-2';
 
 const db = SQLite.openDatabase('Notes.db', '1.0', '', 1);
 
-export default class Home extends React.Component {
+export default class AddNote extends React.Component {
     constructor(props) {
         super(props);
         this.state = {

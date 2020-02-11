@@ -28,9 +28,11 @@ module.exports= StyleSheet.create({
   },
   title_note:{
     flex:0.2,
+    padding:10,
   },
   content_note:{
     flex:0.8,
+    padding:10,
   },
   title_input:{
     flex:0.1,
