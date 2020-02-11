@@ -1,14 +1,12 @@
 /* eslint-disable prettier/prettier */
 import React from 'react';
-import {View,ScrollView,TouchableWithoutFeedback,FlatList,TextInput} from 'react-native';
+import {View,TextInput} from 'react-native';
 import {Button} from 'react-native-elements';
 import NavigationService from '../utils/NavigationService';
 import styles from './Styles';
 import SQLite from 'react-native-sqlite-2';
-import Modal, {ModalContent, ModalTitle, ModalButton, ModalFooter } from 'react-native-modals';
 
 const db = SQLite.openDatabase('Notes.db', '1.0', '', 1);
-var datas = [];
 
 export default class Home extends React.Component {
     constructor(props) {
@@ -17,8 +15,6 @@ export default class Home extends React.Component {
             title:'',
             content:'',
         };
-        this.props.navigation.addListener('willFocus', () => {});
-        this.props.navigation.addListener('didFocus', () => {});
     }
 
     static navigationOptions = ({ navigation }) => {
@@ -42,6 +38,20 @@ export default class Home extends React.Component {
         };
     };
 
+    goBack(){
+        this.props.navigation.goBack(null);
+        return true;
+    }
+
+    add(){
+        let title = this.state.title;
+        let content = this.state.content;
+        db.transaction(function (txn) {
+            txn.executeSql('INSERT INTO Notes (title,content) VALUES ("' + title + '","' + content + '")',[]);
+        });
+        this.props.navigation.navigate('Home');
+    }
+
     render() {
       return (
         <View style={styles.MainContainer}>
@@ -50,8 +60,8 @@ export default class Home extends React.Component {
                 <TextInput placeholder='Content' style={styles.content_input} onChangeText={(content) => this.setState({content})} value={this.state.content}/>
             </View>
             <View style={{flex:0.1,flexDirection:'row',maxWidth:'95%',alignSelf:'center'}}>
-                <Button title='Cancel' type='clear' containerStyle={{flex:0.5,paddingRight:'2%'}}/>
-                <Button title='Add' type='clear' containerStyle={{flex:0.5,paddingLeft:'2%'}}/>
+                <Button title='Cancel' type='clear' containerStyle={{flex:0.5,paddingRight:'2%'}} onPress={() => this.goBack()}/>
+                <Button title='Add' type='clear' containerStyle={{flex:0.5,paddingLeft:'2%'}} onPress={() => this.add()}/>
             </View>
         </View>
       );

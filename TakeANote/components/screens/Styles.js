@@ -19,8 +19,12 @@ module.exports= StyleSheet.create({
     minWidth:'100%',
     backgroundColor:'black',
   },
-  notes:{
-    backgroundColor:'transparent',
+  notes_container:{
+    alignSelf:'center',
+    minWidth:'95%',
+    maxWidth:'95%',
+    minHeight:'98%',
+    maxHeight:'98%',
   },
   title_note:{
     flex:0.2,

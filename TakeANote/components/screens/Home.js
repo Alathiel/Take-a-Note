@@ -1,11 +1,11 @@
 /* eslint-disable prettier/prettier */
 import React from 'react';
-import {View,ScrollView,TouchableWithoutFeedback,FlatList,TextInput} from 'react-native';
-import {Icon,Input,Text} from 'react-native-elements';
+import {View,ScrollView,TouchableWithoutFeedback,FlatList} from 'react-native';
+import {Icon,Text} from 'react-native-elements';
+import BackgroundTimer from 'react-native-background-timer';
 import NavigationService from '../utils/NavigationService';
 import styles from './Styles';
 import SQLite from 'react-native-sqlite-2';
-import Modal, {ModalContent, ModalTitle, ModalButton, ModalFooter } from 'react-native-modals';
 
 const db = SQLite.openDatabase('Notes.db', '1.0', '', 1);
 var datas = [];
@@ -16,7 +16,6 @@ export default class Home extends React.Component {
         this.state = {
             options:false,
             reload:0,
-            add:false,
         };
         this.props.navigation.addListener('willFocus', () => {
             this.getNotes();
@@ -46,6 +45,11 @@ export default class Home extends React.Component {
             },
         };
     };
+
+    componentWillMount(){ //first load
+        const timeoutId = BackgroundTimer.setTimeout(() => {this.getNotes();}, 200);
+        const timeoutId2 = BackgroundTimer.setTimeout(() => {this.getNotes();}, 1000);
+    }
 
     getNotes(){
         db.transaction(function (txn) {
@@ -78,7 +82,6 @@ export default class Home extends React.Component {
         }
     }
 
-
     renderingNotes(){
         if (!this.state.options){
             return (
@@ -88,8 +91,8 @@ export default class Home extends React.Component {
                         <TouchableWithoutFeedback onPress={() => this.props.navigation.navigate('ProductsView',{category: item.category})}
                         onLongPress={() => this.setState({options:true})}>
                             <View>
-                                <View style={styles.title_note}>{datas.title}</View>
-                                <View style={styles.content_note}>{datas.content}</View>
+                                <View style={styles.title_note}><Text>{item.title}</Text></View>
+                                <View style={styles.content_note}><Text>{item.title}</Text></View>
                             </View>
                         </TouchableWithoutFeedback>
                     </View>
@@ -105,7 +108,7 @@ export default class Home extends React.Component {
       return (<>
         <View style={styles.MainContainer}>
             {this.renderingOptions()}
-            <ScrollView key={this.state.reload} locked={true}>
+            <ScrollView key={this.state.reload} locked={true} style={styles.notes_container}>
                 {this.renderingNotes()}
             </ScrollView>
         </View>
