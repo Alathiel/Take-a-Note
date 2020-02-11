@@ -7,10 +7,12 @@ import {createStackNavigator} from 'react-navigation-stack';
 import NavigationService from './NavigationService';
 //screens
 import Home from '../screens/Home';
+import AddNote from '../screens/AddNote';
 
 const AppStack = createStackNavigator(
   {
     Home: Home,
+    AddNote: AddNote,
   },
 );
 
