@@ -9,6 +9,7 @@ import SQLite from 'react-native-sqlite-2';
 
 const db = SQLite.openDatabase('Notes.db', '1.0', '', 1);
 var datas = [];
+var id;
 
 export default class ShowNote extends React.Component {
     constructor(props) {
@@ -16,6 +17,8 @@ export default class ShowNote extends React.Component {
         this.state = {
             reload:0,
             id: this.props.navigation.getParam('id'),
+            title:'',
+            content:'',
         };
         this.props.navigation.addListener('willFocus', () => {
             BackHandler.addEventListener('hardwareBackPress', this.handleBackButton);
@@ -55,13 +58,12 @@ export default class ShowNote extends React.Component {
         const timeoutId = BackgroundTimer.setTimeout(() => {this.getNote();}, 200);
     }
 
-
     handleBackButton(){
-        var id = this.props.navigation.getParam('id');
         db.transaction(function (txn) {
             txn.executeSql('UPDATE Notes SET title="' + datas.title + '" , content="' + datas.content + '" WHERE id=' + id,[]);
         });
         NavigationService.navigate('Home');
+        return true;
     }
 
     forceRemount = () => {
@@ -71,13 +73,14 @@ export default class ShowNote extends React.Component {
     }
 
     getNote(){
-        var id = this.state.id;
+        id = this.state.id;
         db.transaction(function (txn) {
             txn.executeSql('SELECT * FROM Notes WHERE id=' + id, [], function (tx, res) {
                 var row = res.rows.item(0);
                 datas = row;
             });
         });
+        this.setState({title:datas.title,content:datas.content});
         this.forceRemount();
     }
 
@@ -85,8 +88,8 @@ export default class ShowNote extends React.Component {
       return (
         <View style={styles.MainContainer} key={this.state.reload}>
             <View style={{flexDirection:'column',flex:0.9,paddingTop:'3%',maxWidth:'95%',paddingBottom:'5%',alignSelf:'center'}}>
-                <TextInput placeholder='Title' style={styles.title_input} onChangeText={(title) => datas.title=title} value={datas.title}/>
-                <TextInput placeholder='Content' style={styles.content_input} onChangeText={(content) => datas.content=content} value={datas.content}/>
+                <TextInput placeholder='Title' style={styles.title_input} onChangeText={(title) => this.setState({title})} value={this.state.title}/>
+                <TextInput placeholder='Content' style={styles.content_input} onChangeText={(content) => this.setState({content})} value={this.state.content}/>
             </View>
         </View>
       );
