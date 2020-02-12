@@ -9,6 +9,9 @@ import SQLite from 'react-native-sqlite-2';
 
 const db = SQLite.openDatabase('Notes.db', '1.0', '', 1);
 var datas = [];
+var selected = [];
+
+
 
 export default class Home extends React.Component {
     constructor(props) {
@@ -16,6 +19,8 @@ export default class Home extends React.Component {
         this.state = {
             options:false,
             reload:0,
+            id:'',
+            number:0,
         };
         this.props.navigation.addListener('willFocus', () => {
             BackHandler.addEventListener('hardwareBackPress', this.handleBackButton);
@@ -23,27 +28,13 @@ export default class Home extends React.Component {
         });
         this.props.navigation.addListener('didFocus', () => {
             this.getNotes();
+            BackHandler.addEventListener('hardwareBackPress', this.handleBackButton);
         });
     }
 
     static navigationOptions = ({ navigation }) => {
         return {
-            headerTitle:'Take A Note',
-            // headerRight: ()=>(
-            //     {}
-            // ),
-            headerStyle: {
-                backgroundColor: 'rgba(52, 52, 52, 0.0)',
-                shadowColor: 'transparent',
-                borderBottomWidth: 0,
-                shadowOpacity: 0,
-                shadowOffset: {
-                    height: 0,
-                    width: 0,
-                },
-                shadowRadius: 0,
-                elevation: 0,
-            },
+            header: null,
         };
     };
 
@@ -54,6 +45,7 @@ export default class Home extends React.Component {
 
     handleBackButton(){
         BackHandler.exitApp();
+        return true;
     }
 
     getNotes(){
@@ -77,41 +69,97 @@ export default class Home extends React.Component {
         }));
     }
 
+    reloadSelected = () => {
+        this.setState(({ number }) => ({
+            number: number + 1,
+        }));
+    }
+
+    delete(){
+        selected.forEach(element => {
+            db.transaction(function (txn) {
+                txn.executeSql('Delete from Notes where id=' + element,[]);
+            });
+            datas = datas.filter(datas => datas.id !== element);
+        });
+        this.getNotes();
+        selected = selected.filter(selected => selected == null);
+    }
+
     renderingOptions(){
+        var length = selected.length;
+        if (length == 0)
+        {
+            length = '';
+        }
+
         if (this.state.options){
             return (
                 <View style={styles.header_options}>
-
+                    <View style={{alignSelf:'flex-end',flexDirection:'row'}}>
+                        <Text key={this.state.number}>{length}</Text>
+                        <Icon name='delete' type='material-community' onPress={()=> this.delete()} containerStyle={{padding:10}}/>
+                    </View>
                 </View>
             );
         }
     }
 
-    renderingNotes(){
-        if (!this.state.options){
-            return (
-                <FlatList data={datas} numColumns={2} keyExtractor={(item, index) => index.toString()}
-                renderItem={({item}) => (
-                    <View style={{ flex: 1, flexDirection: 'column', margin: 1 }}>
-                        <TouchableOpacity onPress={() => this.props.navigation.navigate('ShowNote',{id: item.id})}
-                        onLongPress={() => this.setState({options:true})}>
-                            <View style={{borderWidth:1,borderColor:'grey',borderRadius:10,margin:5}}>
-                                <View style={styles.title_note}><Text style={{fontSize:25}}>{item.title}</Text></View>
-                                <View style={styles.content_note}><Text style={{fontSize:17}}>{item.content}</Text></View>
-                            </View>
-                        </TouchableOpacity>
-                    </View>
-                )}/>
-            );
+    longPress(id){
+        this.setState({options:true});
+        var flag = true;
+        selected.forEach(element => {
+            if (element == id){
+                flag = false;
+            }
+        });
+        if (flag){
+            selected.push(id);
+            this.reloadSelected();
+        }
+    }
+
+    onPress(id){
+        var flag = true;
+        selected.forEach(element => {
+            if (element == id){
+                flag = false;
+            }
+        });
+        if (this.state.options && !flag){
+            selected = selected.filter(selected => selected != id);
+            if(selected.length == 0){
+                this.setState({options:false});
+            }
+            this.reloadSelected();
         }
         else {
-
+            this.setState({options:false});
+            selected.splice(0);
+            this.props.navigation.navigate('ShowNote',{id: id});
         }
+    }
+
+    renderingNotes(){
+        return (
+            <FlatList data={datas} numColumns={2} keyExtractor={(item, index) => index.toString()}
+            renderItem={({item}) => (
+                <View style={{ flex: 1, flexDirection: 'column', margin: 1 }}>
+                    <TouchableOpacity onPress={() => this.onPress(item.id)}
+                    onLongPress={() => this.longPress(item.id)}>
+                        <View style={{borderWidth:1,borderColor:'grey',borderRadius:10,margin:5}}>
+                            <View style={styles.title_note}><Text style={{fontSize:25}}>{item.title}</Text></View>
+                            <View style={styles.content_note}><Text style={{fontSize:17}}>{item.content}</Text></View>
+                        </View>
+                    </TouchableOpacity>
+                </View>
+            )}/>
+        );
     }
 
     render() {
       return (<>
-        <View style={styles.MainContainer}>
+        <View style={styles.MainContainerHome}>
             {this.renderingOptions()}
             <ScrollView key={this.state.reload} locked={true} style={styles.notes_container}>
                 {this.renderingNotes()}

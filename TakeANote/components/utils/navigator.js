@@ -16,21 +16,11 @@ const AppStack = createStackNavigator(
     AddNote: AddNote,
     ShowNote: ShowNote,
   },
+  {
+    initialRouteName: 'Home',
+  }
 );
 
-// const LoginStack = createStackNavigator(
-//     {
-//         Home: LoginHome,
-//         Login: Login,
-//         SignIn: SignIn,
-//     },
-//     {
-//       initialRouteName: 'Home',
-//       headerMode: 'none',
-//     },
-//   );
-
-//create external navigator
 const AppContainer = createAppContainer(AppStack);
 
 export default class Navigator extends React.Component {
