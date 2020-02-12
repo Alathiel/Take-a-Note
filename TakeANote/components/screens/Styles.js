@@ -33,7 +33,7 @@ module.exports= StyleSheet.create({
     shadowOpacity: 0,
     shadowRadius:0,
     position:'absolute',
-    top:0,
+    top:10,
   },
   notes_container:{
     alignSelf:'center',
