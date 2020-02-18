@@ -6,4 +6,8 @@ App to saves notes.
 
 |Works | To Add        | To Fix        |
 |------| ------------- |:-------------:|
-|Save Notes| Connection FTP| Reload        |
+|Save Notes|           |               |
+|------| ------------- |:-------------:|
+|Edit Notes|           |               |
+|------| ------------- |:-------------:|
+|See Notes|            |               |
