@@ -43,12 +43,14 @@ export default class AddNote extends React.Component {
     }
 
     add(){
-        let title = this.state.title;
-        let content = this.state.content;
-        db.transaction(function (txn) {
-            txn.executeSql('INSERT INTO Notes (title,content) VALUES ("' + title + '","' + content + '")',[]);
-        });
-        this.props.navigation.navigate('Home');
+        if(this.state.title || this.state.content){
+            let title = this.state.title;
+            let content = this.state.content;
+            db.transaction(function (txn) {
+                txn.executeSql('INSERT INTO Notes (title,content) VALUES ("' + title + '","' + content + '")',[]);
+            });
+            this.props.navigation.navigate('Home');
+        }
     }
 
     render() {

@@ -14,15 +14,6 @@ module.exports= StyleSheet.create({
     justifyContent:'center',
     alignContent:'center',
   },
-  MainContainerHome: {
-    minHeight:'100%',
-    maxHeight:'100%',
-    minWidth:'100%',
-    maxWidth:'100%',
-    justifyContent:'center',
-    alignContent:'center',
-    paddingTop:'10%',
-  },
   header_options: {
     minHeight:'10%',
     maxHeight:'10%',
@@ -32,8 +23,7 @@ module.exports= StyleSheet.create({
     borderWidth: 0,
     shadowOpacity: 0,
     shadowRadius:0,
-    position:'absolute',
-    top:10,
+    top:30,
   },
   notes_container:{
     alignSelf:'center',
@@ -49,6 +39,11 @@ module.exports= StyleSheet.create({
   content_note:{
     flex:0.8,
     padding:10,
+  },
+  selection_indicator:{
+    alignSelf:'flex-end',
+    position:'absolute',
+    right:5,
   },
   title_input:{
     flex:0.1,

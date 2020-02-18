@@ -75,14 +75,8 @@ export default class Home extends React.Component {
         }));
     }
 
-    delete(){
-        selected.forEach(element => {
-            db.transaction(function (txn) {
-                txn.executeSql('Delete from Notes where id=' + element,[]);
-            });
-            datas = datas.filter(datas => datas.id !== element);
-        });
-        this.getNotes();
+    cancel(){
+        this.setState({options:false});
         selected = selected.filter(selected => selected == null);
     }
 
@@ -95,14 +89,31 @@ export default class Home extends React.Component {
 
         if (this.state.options){
             return (
-                <View style={styles.header_options}>
-                    <View style={{alignSelf:'flex-end',flexDirection:'row'}}>
-                        <Text key={this.state.number}>{length}</Text>
-                        <Icon name='delete' type='material-community' onPress={()=> this.delete()} containerStyle={{padding:10}}/>
-                    </View>
+
+                <View style={{flexDirection:'row'}}>
+                    <Icon name='close' type='material-community' containerStyle={{padding:10}} onPress={() => this.cancel()}/>
+                    <Text key={this.state.number} style={{fontWeight:'bold',paddingTop:9,fontSize:20}}>{length}</Text>
+                    <TouchableWithoutFeedback onPress={() => this.delete()}>
+                        <Icon name='delete' type='material-community' color='grey' containerStyle={{padding:10,alignSelf:'flex-end',}}/>
+                    </TouchableWithoutFeedback>
                 </View>
             );
         }
+        else{
+
+        }
+    }
+
+    delete(){
+        selected.forEach(element => {
+            db.transaction(function (txn) {
+                txn.executeSql('Delete from Notes where id=' + element,[]);
+            });
+            datas = datas.filter(datas => datas.id !== element);
+        });
+        this.forceRemount();
+        this.setState({options:false});
+        selected = selected.filter(selected => selected == null);
     }
 
     longPress(id){
@@ -120,7 +131,7 @@ export default class Home extends React.Component {
     }
 
     onPress(id){
-        var flag = true;
+        let flag = true;
         selected.forEach(element => {
             if (element == id){
                 flag = false;
@@ -140,36 +151,87 @@ export default class Home extends React.Component {
         }
     }
 
-    renderingNotes(){
-        return (
-            <FlatList data={datas} numColumns={2} keyExtractor={(item, index) => index.toString()}
-            renderItem={({item}) => (
-                <View style={{ flex: 1, flexDirection: 'column', margin: 1 }}>
-                    <TouchableOpacity onPress={() => this.onPress(item.id)}
-                    onLongPress={() => this.longPress(item.id)}>
-                        <View style={{borderWidth:1,borderColor:'grey',borderRadius:10,margin:5}}>
-                            <View style={styles.title_note}><Text style={{fontSize:25}}>{item.title}</Text></View>
-                            <View style={styles.content_note}><Text style={{fontSize:17}}>{item.content}</Text></View>
-                        </View>
-                    </TouchableOpacity>
+    onAddPress(){
+        this.props.navigation.navigate('AddNote');
+        this.setState({options:false});
+        selected = selected.filter(selected => selected == null);
+    }
+
+    renderSelected(id){
+        let flag = false;
+        selected.forEach(element => {
+            if (element == id){
+                flag = true;
+            }
+        });
+        if (flag){
+            return (
+                <View style={styles.selection_indicator}>
+                    <Icon name='checkbox-blank-circle' type='material-community' color='#33cc33'/>
                 </View>
-            )}/>
-        );
+            );
+        }
+        else {
+            return (
+                <View style={styles.selection_indicator}>
+                    <Icon name='checkbox-blank-circle-outline' type='material-community' color='black'/>
+                </View>
+            );
+        }
+    }
+
+    renderingNotes(){
+        if (!this.state.options){
+            return (
+                <FlatList data={datas} numColumns={2} keyExtractor={(item, index) => index.toString()}
+                renderItem={({item}) => (
+                    <View style={{ flex: 1, flexDirection: 'column', margin: 1 }}>
+                        <TouchableOpacity onPress={() => this.onPress(item.id)}
+                        onLongPress={() => this.longPress(item.id)}>
+                            <View style={{borderWidth:1,borderColor:'grey',borderRadius:10,margin:5}}>
+                                <View style={styles.title_note}><Text style={{fontSize:25}}>{item.title}</Text></View>
+                                <View style={styles.content_note}><Text style={{fontSize:17}}>{item.content}</Text></View>
+                            </View>
+                        </TouchableOpacity>
+                    </View>
+                )}/>
+            );
+        }
+        else {
+            return (
+                <FlatList data={datas} numColumns={2} keyExtractor={(item, index) => index.toString()}
+                renderItem={({item}) => (
+                    <View style={{ flex: 1, flexDirection: 'column', margin: 1 }}>
+                        <TouchableOpacity onPress={() => this.onPress(item.id)}
+                        onLongPress={() => this.longPress(item.id)}>
+                            <View style={{borderWidth:1,borderColor:'grey',borderRadius:10,margin:5}}>
+                                {this.renderSelected(item.id)}
+                                <View style={styles.title_note}><Text style={{fontSize:25}}>{item.title}</Text></View>
+                                <View style={styles.content_note}><Text style={{fontSize:17}}>{item.content}</Text></View>
+                            </View>
+                        </TouchableOpacity>
+                    </View>
+                )}/>
+            );
+        }
     }
 
     render() {
       return (<>
-        <View style={styles.MainContainerHome}>
+        <View style={styles.MainContainer}>
+        <View style={styles.header_options}>
             {this.renderingOptions()}
+        </View>
             <ScrollView key={this.state.reload} locked={true} style={styles.notes_container}>
                 {this.renderingNotes()}
             </ScrollView>
         </View>
         <View style={styles.fixedButton}>
-            <TouchableWithoutFeedback onPress={() => this.props.navigation.navigate('AddNote')}>
+            <TouchableWithoutFeedback onPress={() => this.onAddPress()}>
                 <Icon name="add" type="material-icons" color="white"/>
             </TouchableWithoutFeedback>
-        </View></>
+        </View>
+        </>
       );
     }
   }
