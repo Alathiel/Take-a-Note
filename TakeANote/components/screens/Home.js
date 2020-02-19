@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 import React from 'react';
-import {View,ScrollView,TouchableWithoutFeedback,FlatList,TouchableOpacity,BackHandler} from 'react-native';
+import {View,ScrollView,TouchableWithoutFeedback,FlatList,TouchableOpacity,BackHandler,KeyboardAvoidingView} from 'react-native';
 import {Icon,Text,SearchBar} from 'react-native-elements';
 import BackgroundTimer from 'react-native-background-timer';
 import NavigationService from '../utils/NavigationService';
@@ -101,10 +101,10 @@ export default class Home extends React.Component {
                 </View>
             );
         }
-        else{
-            return(
+        else {
+            return (
                 <View style={{alignSelf:'center'}}>
-                    <SearchBar lightTheme round placeholder="Type Here..." onChangeText={(title) => this.search(title)} value={this.state.search} onClear={this.cleared()}/>
+                    <SearchBar lightTheme round placeholder="Type Here..." onChangeText={(title) => this.search(title)} value={this.state.search} onClear={this.cleared()} containerStyle={styles.search_input}/>
                 </View>
             );
         }
@@ -242,9 +242,9 @@ export default class Home extends React.Component {
     render() {
       return (<>
         <View style={styles.MainContainer}>
-        <View style={styles.header_options}>
-            {this.renderingOptions()}
-        </View>
+            <View style={styles.header_options}>
+                {this.renderingOptions()}
+            </View>
             <ScrollView key={this.state.reload} locked={true} style={styles.notes_container}>
                 {this.renderingNotes()}
             </ScrollView>

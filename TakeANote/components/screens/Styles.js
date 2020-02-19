@@ -15,6 +15,7 @@ module.exports= StyleSheet.create({
     alignContent:'center',
   },
   header_options: {
+    position:'relative',
     minHeight:'10%',
     maxHeight:'10%',
     minWidth:'100%',
@@ -25,12 +26,21 @@ module.exports= StyleSheet.create({
     shadowRadius:0,
     top:30,
   },
+  search_input:{
+    paddingTop:'3%',
+    minWidth:'90%',
+    maxHeight:'80%',
+    backgroundColor:'rgba(52, 52, 52, 0.0)',
+    borderTopWidth:0,
+    borderBottomWidth:0,
+  },
   notes_container:{
     alignSelf:'center',
     minWidth:'95%',
     maxWidth:'95%',
     minHeight:'98%',
     maxHeight:'98%',
+    paddingTop:'6%',
   },
   title_note:{
     flex:0.2,
