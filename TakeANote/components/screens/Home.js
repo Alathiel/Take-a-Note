@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
 import React from 'react';
 import {View,ScrollView,TouchableWithoutFeedback,FlatList,TouchableOpacity,BackHandler} from 'react-native';
-import {Icon,Text} from 'react-native-elements';
+import {Icon,Text,SearchBar} from 'react-native-elements';
 import BackgroundTimer from 'react-native-background-timer';
 import NavigationService from '../utils/NavigationService';
 import styles from './Styles';
@@ -21,6 +21,8 @@ export default class Home extends React.Component {
             reload:0,
             id:'',
             number:0,
+            search:'',
+            refresh:false,
         };
         this.props.navigation.addListener('willFocus', () => {
             BackHandler.addEventListener('hardwareBackPress', this.handleBackButton);
@@ -100,7 +102,28 @@ export default class Home extends React.Component {
             );
         }
         else{
+            return(
+                <View style={{alignSelf:'center'}}>
+                    <SearchBar lightTheme round placeholder="Type Here..." onChangeText={(title) => this.search(title)} value={this.state.search} onClear={this.cleared()}/>
+                </View>
+            );
+        }
+    }
 
+    search(title){
+        this.setState({search:title});
+        var searching = title;
+        if (searching != ''){
+            datas = datas.filter(datas => datas.title.toUpperCase().includes(searching.toUpperCase()));
+            this.forceRemount();
+            this.setState({refresh:true});
+        }
+    }
+
+    cleared(){
+        if (this.state.refresh){
+            this.getNotes();
+            this.setState({refresh:false});
         }
     }
 
