@@ -85,7 +85,7 @@ export default class Home extends React.Component {
         if (this.state.options){
             return (
 
-                <View style={{flexDirection:'row'}}>
+                <View style={{flexDirection:'row',paddingTop:10}}>
                     <Icon name='close' type='material-community' containerStyle={{padding:10}} onPress={() => this.cancel()}/>
                     <Text key={this.state.number} style={{fontWeight:'bold',paddingTop:9,fontSize:20}}>{length}</Text>
                     <TouchableWithoutFeedback onPress={() => this.delete()}>
@@ -133,7 +133,7 @@ export default class Home extends React.Component {
     }
 
     longPress(id){
-        this.setState({options:true});
+        this.setState({options:true,search:''});
         var flag = true;
         selected.forEach(element => {
             if (element == id){
@@ -153,16 +153,19 @@ export default class Home extends React.Component {
                 flag = false;
             }
         });
-        if (this.state.options && !flag){
-            selected = selected.filter(selected => selected != id);
-            if(selected.length == 0){
-                this.setState({options:false});
+        if (this.state.options){
+            if (!flag){
+                selected = selected.filter(selected => selected != id);
+                if(selected.length == 0){
+                    this.setState({options:false});
+                }
+            }
+            else {
+                selected.push(id);
             }
             this.reloadSelected();
         }
         else {
-            this.setState({options:false});
-            selected.splice(0);
             this.props.navigation.navigate('ShowNote',{id: id});
         }
     }
