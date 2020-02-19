@@ -37,11 +37,6 @@ export default class AddNote extends React.Component {
         };
     };
 
-    goBack(){
-        this.props.navigation.goBack(null);
-        return true;
-    }
-
     add(){
         if(this.state.title || this.state.content){
             let title = this.state.title;

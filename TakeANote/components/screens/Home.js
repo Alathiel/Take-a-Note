@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 import React from 'react';
-import {View,ScrollView,TouchableWithoutFeedback,FlatList,TouchableOpacity,BackHandler,KeyboardAvoidingView} from 'react-native';
+import {View,ScrollView,TouchableWithoutFeedback,FlatList,TouchableOpacity} from 'react-native';
 import {Icon,Text,SearchBar} from 'react-native-elements';
 import BackgroundTimer from 'react-native-background-timer';
 import NavigationService from '../utils/NavigationService';
@@ -25,12 +25,10 @@ export default class Home extends React.Component {
             refresh:false,
         };
         this.props.navigation.addListener('willFocus', () => {
-            BackHandler.addEventListener('hardwareBackPress', this.handleBackButton);
             this.getNotes();
         });
         this.props.navigation.addListener('didFocus', () => {
             this.getNotes();
-            BackHandler.addEventListener('hardwareBackPress', this.handleBackButton);
         });
     }
 
@@ -43,11 +41,6 @@ export default class Home extends React.Component {
     componentWillMount(){ //first load
         const timeoutId = BackgroundTimer.setTimeout(() => {this.getNotes();}, 200);
         const timeoutId2 = BackgroundTimer.setTimeout(() => {this.getNotes();}, 1000);
-    }
-
-    handleBackButton(){
-        BackHandler.exitApp();
-        return true;
     }
 
     getNotes(){

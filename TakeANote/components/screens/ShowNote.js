@@ -54,6 +54,10 @@ export default class ShowNote extends React.Component {
         const timeoutId = BackgroundTimer.setTimeout(() => {this.getNote();}, 200);
     }
 
+    componentWillUnmount(){
+        BackHandler.removeEventListener('hardwareBackPress', this.handleBackButton);
+    }
+
     componentDidMount(){
         const timeoutId = BackgroundTimer.setTimeout(() => {this.getNote();}, 200);
     }
