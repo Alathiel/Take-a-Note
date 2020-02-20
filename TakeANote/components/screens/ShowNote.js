@@ -102,8 +102,8 @@ export default class ShowNote extends React.Component {
       return (
         <View style={styles.MainContainer} key={this.state.reload}>
             <View style={{flexDirection:'column',flex:1,maxWidth:'95%',alignSelf:'center'}}>
-                <TextInput placeholder='Title' style={styles.title_input} onChangeText={(title) => this.update_title(title)} value={this.state.title}/>
-                <TextInput placeholder='Content' style={styles.content_input} onChangeText={(content) => this.update_content(content)} value={this.state.content}/>
+                <TextInput multiline={true} placeholder='Title' style={styles.title_input} onChangeText={(title) => this.update_title(title)} value={this.state.title}/>
+                <TextInput multiline={true} placeholder='Content' style={styles.content_input} onChangeText={(content) => this.update_content(content)} value={this.state.content}/>
             </View>
         </View>
       );

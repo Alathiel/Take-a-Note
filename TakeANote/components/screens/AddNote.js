@@ -52,8 +52,8 @@ export default class AddNote extends React.Component {
       return (
         <View style={styles.MainContainer}>
             <View style={{flexDirection:'column',flex:0.9,paddingTop:'3%',maxWidth:'95%',paddingBottom:'5%',alignSelf:'center'}}>
-                <TextInput placeholder='Title' style={styles.title_input} onChangeText={(title) => this.setState({title})} value={this.state.title}/>
-                <TextInput placeholder='Content' style={styles.content_input} onChangeText={(content) => this.setState({content})} value={this.state.content}/>
+                <TextInput multiline={true} placeholder='Title' style={styles.title_input} onChangeText={(title) => this.setState({title})} value={this.state.title}/>
+                <TextInput multiline={true} placeholder='Content' style={styles.content_input} onChangeText={(content) => this.setState({content})} value={this.state.content}/>
             </View>
             <View style={{flex:0.1,flexDirection:'row',maxWidth:'95%',alignSelf:'center'}}>
                 <Button title='Cancel' type='clear' containerStyle={{flex:0.5,paddingRight:'2%'}} onPress={() => this.goBack()}/>
