@@ -4,6 +4,7 @@ import {View,TextInput} from 'react-native';
 import {Button} from 'react-native-elements';
 import styles from './Styles';
 import SQLite from 'react-native-sqlite-2';
+import NavigationService from '../utils/NavigationService';
 
 const db = SQLite.openDatabase('Notes.db', '1.0', '', 1);
 
@@ -46,6 +47,11 @@ export default class AddNote extends React.Component {
             });
             this.props.navigation.navigate('Home');
         }
+    }
+
+    goBack(){
+        NavigationService.navigate('Home');
+        return true;
     }
 
     render() {
