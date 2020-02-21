@@ -2,6 +2,7 @@
 /* eslint-disable prettier/prettier */
 import React from 'react';
 import {View,TextInput,BackHandler} from 'react-native';
+import {Icon} from 'react-native-elements';
 import BackgroundTimer from 'react-native-background-timer';
 import styles from './Styles';
 import NavigationService from '../utils/NavigationService';
@@ -30,11 +31,12 @@ export default class ShowNote extends React.Component {
     }
 
     static navigationOptions = ({ navigation }) => {
+        const { params = {} } = navigation.state;
         return {
             headerTitle:'Your Note',
-            // headerRight: ()=>(
-            //     {}
-            // ),
+            headerLeft: ()=>(
+                <Icon name='arrow-left' type='material-community' containerStyle={{padding:10}} onPress={() => params.handleBackButton()}/>
+            ),
             headerStyle: {
                 backgroundColor: 'rgba(52, 52, 52, 0.0)',
                 shadowColor: 'transparent',
@@ -60,6 +62,7 @@ export default class ShowNote extends React.Component {
 
     componentDidMount(){
         const timeoutId = BackgroundTimer.setTimeout(() => {this.getNote();}, 200);
+        this.props.navigation.setParams({handleBackButton:this.handleBackButton,});
     }
 
     handleBackButton(){

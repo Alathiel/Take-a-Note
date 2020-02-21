@@ -158,7 +158,7 @@ export default class Home extends React.Component {
         if (this.state.options){
             if (!flag){
                 selected = selected.filter(selected => selected != id);
-                if(selected.length == 0){
+                if (selected.length == 0){
                     this.setState({options:false});
                 }
             }
