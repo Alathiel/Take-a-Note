@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 import React from 'react';
-import {View,ScrollView,TouchableWithoutFeedback,FlatList,TouchableOpacity} from 'react-native';
+import {View,ScrollView,TouchableWithoutFeedback,FlatList,TouchableOpacity, ActivityIndicator} from 'react-native';
 import {Icon,Text,SearchBar} from 'react-native-elements';
 import BackgroundTimer from 'react-native-background-timer';
 import NavigationService from '../utils/NavigationService';
@@ -10,6 +10,7 @@ import SQLite from 'react-native-sqlite-2';
 const db = SQLite.openDatabase('Notes.db', '1.0', '', 1);
 var datas = [];
 var selected = [];
+var load = false;
 
 
 
@@ -56,6 +57,7 @@ export default class Home extends React.Component {
             });
         });
         this.forceRemount();
+        load = true;
     }
 
     forceRemount = () => {
@@ -166,6 +168,7 @@ export default class Home extends React.Component {
             this.reloadSelected();
         }
         else {
+            load = false;
             this.props.navigation.navigate('ShowNote',{id: id});
         }
     }
@@ -200,56 +203,66 @@ export default class Home extends React.Component {
     }
 
     renderingNotes(){
-        if (!this.state.options){
-            return (
-                <FlatList data={datas} numColumns={2} keyExtractor={(item, index) => index.toString()}
-                renderItem={({item}) => (
-                    <View style={{ flex: 1, flexDirection: 'column', margin: 1 }}>
-                        <TouchableOpacity onPress={() => this.onPress(item.id)}
-                        onLongPress={() => this.longPress(item.id)}>
-                            <View style={{borderWidth:1,borderColor:'grey',borderRadius:10,margin:5}}>
-                                <View style={styles.title_note}><Text style={{fontSize:25}}>{item.title}</Text></View>
-                                <View style={styles.content_note}><Text style={{fontSize:17}}>{item.content}</Text></View>
-                            </View>
-                        </TouchableOpacity>
-                    </View>
-                )}/>
-            );
+        if (load){
+            if (!this.state.options){
+                return (
+                    <FlatList data={datas} numColumns={2} keyExtractor={(item, index) => index.toString()}
+                    renderItem={({item}) => (
+                        <View style={{ flex: 1, flexDirection: 'column', margin: 1 }}>
+                            <TouchableOpacity onPress={() => this.onPress(item.id)}
+                            onLongPress={() => this.longPress(item.id)}>
+                                <View style={{borderWidth:1,borderColor:'grey',borderRadius:10,margin:5}}>
+                                    <View style={styles.title_note}><Text style={{fontSize:25}}>{item.title}</Text></View>
+                                    <View style={styles.content_note}><Text style={{fontSize:17}}>{item.content}</Text></View>
+                                </View>
+                            </TouchableOpacity>
+                        </View>
+                    )}/>
+                );
+            }
+            else {
+                return (
+                    <FlatList data={datas} numColumns={2} keyExtractor={(item, index) => index.toString()}
+                    renderItem={({item}) => (
+                        <View style={{ flex: 1, flexDirection: 'column', margin: 1 }}>
+                            <TouchableOpacity onPress={() => this.onPress(item.id)}
+                            onLongPress={() => this.longPress(item.id)}>
+                                <View style={{borderWidth:1,borderColor:'grey',borderRadius:10,margin:5}}>
+                                    {this.renderSelected(item.id)}
+                                    <View style={styles.title_note}><Text style={{fontSize:25}}>{item.title}</Text></View>
+                                    <View style={styles.content_note}><Text style={{fontSize:17}}>{item.content}</Text></View>
+                                </View>
+                            </TouchableOpacity>
+                        </View>
+                    )}/>
+                );
+            }
         }
         else {
             return (
-                <FlatList data={datas} numColumns={2} keyExtractor={(item, index) => index.toString()}
-                renderItem={({item}) => (
-                    <View style={{ flex: 1, flexDirection: 'column', margin: 1 }}>
-                        <TouchableOpacity onPress={() => this.onPress(item.id)}
-                        onLongPress={() => this.longPress(item.id)}>
-                            <View style={{borderWidth:1,borderColor:'grey',borderRadius:10,margin:5}}>
-                                {this.renderSelected(item.id)}
-                                <View style={styles.title_note}><Text style={{fontSize:25}}>{item.title}</Text></View>
-                                <View style={styles.content_note}><Text style={{fontSize:17}}>{item.content}</Text></View>
-                            </View>
-                        </TouchableOpacity>
-                    </View>
-                )}/>
+                <View style={{justifyContent:'center', alignContent:'center'}}>
+                    <ActivityIndicator size="large" color="#0000ff"/>
+                </View>
             );
         }
     }
 
     render() {
-      return (<>
-        <View style={styles.MainContainer}>
-            <View style={styles.header_options}>
-                {this.renderingOptions()}
+      return (
+        <>
+            <View style={styles.MainContainer}>
+                <View style={styles.header_options}>
+                    {this.renderingOptions()}
+                </View>
+                <ScrollView key={this.state.reload} locked={true} style={styles.notes_container}>
+                    {this.renderingNotes()}
+                </ScrollView>
             </View>
-            <ScrollView key={this.state.reload} locked={true} style={styles.notes_container}>
-                {this.renderingNotes()}
-            </ScrollView>
-        </View>
-        <View style={styles.fixedButton}>
-            <TouchableWithoutFeedback onPress={() => this.onAddPress()}>
-                <Icon name="add" type="material-icons" color="white"/>
-            </TouchableWithoutFeedback>
-        </View>
+            <View style={styles.fixedButton}>
+                <TouchableWithoutFeedback onPress={() => this.onAddPress()}>
+                    <Icon name="add" type="material-icons" color="white"/>
+                </TouchableWithoutFeedback>
+            </View>
         </>
       );
     }
