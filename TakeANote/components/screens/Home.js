@@ -266,7 +266,7 @@ export default class Home extends React.Component {
             </View>
             <View style={styles.fixedButton}>
                 <TouchableWithoutFeedback onPress={() => this.onAddPress()}>
-                    <Icon name="add" type="material-icons" color="white"/>
+                    <Icon name="pencil" type="material-community" color="white"/>
                 </TouchableWithoutFeedback>
             </View>
         </>

@@ -15,7 +15,9 @@ module.exports= StyleSheet.create({
     alignContent:'center',
   },
   header_options: {
-    position:'relative',
+    // position:'relative',
+    marginTop:10,
+    paddingTop:20,
     minHeight:'10%',
     maxHeight:'10%',
     minWidth:'100%',
@@ -24,7 +26,7 @@ module.exports= StyleSheet.create({
     borderWidth: 0,
     shadowOpacity: 0,
     shadowRadius:0,
-    top:30,
+    // top:30,
   },
   header_elements:{
     flexDirection:'row',
