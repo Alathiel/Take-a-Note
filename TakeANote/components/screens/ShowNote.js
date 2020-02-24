@@ -66,8 +66,13 @@ export default class ShowNote extends React.Component {
     }
 
     handleBackButton(){
+        var date = new Date().getDate() + '/' + (new Date().getMonth() + 1) + '/' + new Date().getFullYear() + ' ' + new Date().getHours() + ':' + new Date().getMinutes();
         db.transaction(function (txn) {
-            txn.executeSql('UPDATE Notes SET title="' + datas.title + '" , content="' + datas.content + '" WHERE id=' + id,[]);
+            try{
+            txn.executeSql('UPDATE Notes SET title="' + datas.title + '" , content="' + datas.content + '", data="' + date + '" WHERE id=' + id,[]);
+            }catch(err){
+                alert(err);
+            }
         });
         NavigationService.navigate('Home');
         return true;

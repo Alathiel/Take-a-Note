@@ -39,11 +39,12 @@ export default class AddNote extends React.Component {
     };
 
     add(){
-        if(this.state.title || this.state.content){
+        var date = new Date().getDate() + '/' + (new Date().getMonth() + 1) + '/' + new Date().getFullYear() + ' ' + new Date().getHours() + ':' + new Date().getMinutes();
+        if (this.state.title || this.state.content){
             let title = this.state.title;
             let content = this.state.content;
             db.transaction(function (txn) {
-                txn.executeSql('INSERT INTO Notes (title,content) VALUES ("' + title + '","' + content + '")',[]);
+                txn.executeSql('INSERT INTO Notes (title,content,data) VALUES ("' + title + '","' + content + '","' + date + '")',[]);
             });
             this.props.navigation.navigate('Home');
         }

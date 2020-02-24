@@ -52,8 +52,13 @@ module.exports= StyleSheet.create({
     padding:10,
   },
   content_note:{
-    flex:0.8,
+    flex:0.7,
     padding:10,
+  },
+  footer:{
+    flex:0.1,
+    flexDirection:'row-reverse',
+    maxWidth:'98%',
   },
   selection_indicator:{
     alignSelf:'flex-end',

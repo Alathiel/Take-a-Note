@@ -102,7 +102,7 @@ export default class Home extends React.Component {
                 <View style={{flexDirection:'row',alignSelf:'center'}}>
                     <SearchBar lightTheme round placeholder="Type Here..." onChangeText={(title) => this.search(title)}
                     value={this.state.search} onClear={this.cleared()} containerStyle={styles.search_input} onFocus={() => items=true} onBlur={() => items=false}/>
-                    <Icon name='settings' type='material-icons' color='grey' containerStyle={{paddingTop:20,paddingLeft:30}} onPress={() =>  this.props.navigation.navigate('Settings')}/>
+                    <Icon name='settings' type='material-icons' color='black' containerStyle={{paddingTop:20,paddingLeft:30}} onPress={() =>  this.props.navigation.navigate('Settings')}/>
                 </View>
             );
         }
@@ -218,6 +218,7 @@ export default class Home extends React.Component {
                                 <View style={{borderWidth:1,borderColor:'grey',borderRadius:10,margin:5}}>
                                     <View style={styles.title_note}><Text style={{fontSize:25}}>{item.title}</Text></View>
                                     <View style={styles.content_note}><Text style={{fontSize:17}}>{item.content}</Text></View>
+                                    <View style={styles.footer}><Text style={{color:'grey'}}>{item.data}</Text></View>
                                 </View>
                             </TouchableOpacity>
                         </View>
@@ -235,6 +236,7 @@ export default class Home extends React.Component {
                                     {this.renderSelected(item.id)}
                                     <View style={styles.title_note}><Text style={{fontSize:25}}>{item.title}</Text></View>
                                     <View style={styles.content_note}><Text style={{fontSize:17}}>{item.content}</Text></View>
+                                    <View style={styles.footer}><Text style={{color:'grey'}}>{item.data}</Text></View>
                                 </View>
                             </TouchableOpacity>
                         </View>
