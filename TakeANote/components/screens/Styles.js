@@ -26,6 +26,11 @@ module.exports= StyleSheet.create({
     shadowRadius:0,
     top:30,
   },
+  header_elements:{
+    flexDirection:'row',
+    paddingTop:10,
+    minWidth:'100%',
+  },
   search_input:{
     paddingTop:'3%',
     minWidth:'90%',

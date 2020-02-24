@@ -11,6 +11,7 @@ const db = SQLite.openDatabase('Notes.db', '1.0', '', 1);
 var datas = [];
 var selected = [];
 var load = false;
+var items = false;
 
 
 
@@ -26,9 +27,11 @@ export default class Home extends React.Component {
             refresh:false,
         };
         this.props.navigation.addListener('willFocus', () => {
+            load = false;
             this.getNotes();
         });
         this.props.navigation.addListener('didFocus', () => {
+            load = false;
             this.getNotes();
         });
     }
@@ -87,19 +90,18 @@ export default class Home extends React.Component {
         if (this.state.options){
             return (
 
-                <View style={{flexDirection:'row',paddingTop:10}}>
+                <View style={styles.header_elements}>
                     <Icon name='close' type='material-community' containerStyle={{padding:10}} onPress={() => this.cancel()}/>
                     <Text key={this.state.number} style={{fontWeight:'bold',paddingTop:9,fontSize:20}}>{length}</Text>
-                    <TouchableWithoutFeedback onPress={() => this.delete()}>
-                        <Icon name='delete' type='material-community' color='grey' containerStyle={{padding:10,alignSelf:'flex-end',}}/>
-                    </TouchableWithoutFeedback>
+                    <Icon name='delete' type='material-community' color='grey' containerStyle={{padding:10}} onPress={() => this.delete()}/>
                 </View>
             );
         }
         else {
             return (
                 <View style={{alignSelf:'center'}}>
-                    <SearchBar lightTheme round placeholder="Type Here..." onChangeText={(title) => this.search(title)} value={this.state.search} onClear={this.cleared()} containerStyle={styles.search_input}/>
+                    <SearchBar lightTheme round placeholder="Type Here..." onChangeText={(title) => this.search(title)}
+                    value={this.state.search} onClear={this.cleared()} containerStyle={styles.search_input} onFocus={() => items=true} onBlur={() => items=false}/>
                 </View>
             );
         }
@@ -116,6 +118,7 @@ export default class Home extends React.Component {
     }
 
     cleared(){
+        items = false;
         if (this.state.refresh){
             this.getNotes();
             this.setState({refresh:false});
@@ -210,7 +213,7 @@ export default class Home extends React.Component {
                     renderItem={({item}) => (
                         <View style={{ flex: 1, flexDirection: 'column', margin: 1 }}>
                             <TouchableOpacity onPress={() => this.onPress(item.id)}
-                            onLongPress={() => this.longPress(item.id)}>
+                            onLongPress={() => this.longPress(item.id)} disabled={items}>
                                 <View style={{borderWidth:1,borderColor:'grey',borderRadius:10,margin:5}}>
                                     <View style={styles.title_note}><Text style={{fontSize:25}}>{item.title}</Text></View>
                                     <View style={styles.content_note}><Text style={{fontSize:17}}>{item.content}</Text></View>
@@ -225,7 +228,7 @@ export default class Home extends React.Component {
                     <FlatList data={datas} numColumns={2} keyExtractor={(item, index) => index.toString()}
                     renderItem={({item}) => (
                         <View style={{ flex: 1, flexDirection: 'column', margin: 1 }}>
-                            <TouchableOpacity onPress={() => this.onPress(item.id)}
+                            <TouchableOpacity onPress={() => this.onPress(item.id)} disabled={items}
                             onLongPress={() => this.longPress(item.id)}>
                                 <View style={{borderWidth:1,borderColor:'grey',borderRadius:10,margin:5}}>
                                     {this.renderSelected(item.id)}
