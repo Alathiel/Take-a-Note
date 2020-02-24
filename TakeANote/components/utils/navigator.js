@@ -9,12 +9,14 @@ import NavigationService from './NavigationService';
 import Home from '../screens/Home';
 import AddNote from '../screens/AddNote';
 import ShowNote from '../screens/ShowNote';
+import Settings from '../screens/Settings';
 
 const AppStack = createStackNavigator(
   {
     Home: Home,
     AddNote: AddNote,
     ShowNote: ShowNote,
+    Settings: Settings,
   },
   {
     initialRouteName: 'Home',

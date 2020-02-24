@@ -33,7 +33,7 @@ module.exports= StyleSheet.create({
   },
   search_input:{
     paddingTop:'3%',
-    minWidth:'90%',
+    minWidth:'80%',
     maxHeight:'80%',
     backgroundColor:'rgba(52, 52, 52, 0.0)',
     borderTopWidth:0,

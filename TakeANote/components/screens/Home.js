@@ -99,9 +99,10 @@ export default class Home extends React.Component {
         }
         else {
             return (
-                <View style={{alignSelf:'center'}}>
+                <View style={{flexDirection:'row',alignSelf:'center'}}>
                     <SearchBar lightTheme round placeholder="Type Here..." onChangeText={(title) => this.search(title)}
                     value={this.state.search} onClear={this.cleared()} containerStyle={styles.search_input} onFocus={() => items=true} onBlur={() => items=false}/>
+                    <Icon name='settings' type='material-icons' color='grey' containerStyle={{paddingTop:20,paddingLeft:30}} onPress={() =>  this.props.navigation.navigate('Settings')}/>
                 </View>
             );
         }
