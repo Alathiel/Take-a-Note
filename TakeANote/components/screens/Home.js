@@ -177,10 +177,15 @@ export default class Home extends React.Component {
         }
     }
 
-    onAddPress(){
-        this.props.navigation.navigate('AddNote');
+    onAddPress(flag){
         this.setState({options:false});
         selected = selected.filter(selected => selected == null);
+        if (flag == 'add'){
+            this.props.navigation.navigate('AddNote');
+        }
+        else{
+            this.props.navigation.navigate('PaintNote');
+        }
     }
 
     renderSelected(id){
@@ -263,9 +268,14 @@ export default class Home extends React.Component {
                 <ScrollView key={this.state.reload} locked={true} style={styles.notes_container}>
                     {this.renderingNotes()}
                 </ScrollView>
+                <View style={styles.home_footer}>
+                    <TouchableOpacity onPress={() => this.onAddPress('paint')}>
+                        <Icon name="brush" type="material-community" color="grey"/>
+                    </TouchableOpacity>
+                </View>
             </View>
             <View style={styles.fixedButton}>
-                <TouchableWithoutFeedback onPress={() => this.onAddPress()}>
+                <TouchableWithoutFeedback onPress={() => this.onAddPress('add')}>
                     <Icon name="pencil" type="material-community" color="white"/>
                 </TouchableWithoutFeedback>
             </View>

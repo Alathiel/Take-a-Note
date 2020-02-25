@@ -15,9 +15,7 @@ module.exports= StyleSheet.create({
     alignContent:'center',
   },
   header_options: {
-    // position:'relative',
     marginTop:10,
-    paddingTop:25,
     minHeight:'10%',
     maxHeight:'10%',
     minWidth:'100%',
@@ -26,7 +24,7 @@ module.exports= StyleSheet.create({
     borderWidth: 0,
     shadowOpacity: 0,
     shadowRadius:0,
-    // top:30,
+    flex:0.1,
   },
   header_elements:{
     flexDirection:'row',
@@ -42,12 +40,10 @@ module.exports= StyleSheet.create({
     borderBottomWidth:0,
   },
   notes_container:{
+    flex:0.9,
     alignSelf:'center',
     minWidth:'95%',
     maxWidth:'95%',
-    minHeight:'98%',
-    maxHeight:'98%',
-    paddingTop:'6%',
   },
   title_note:{
     flex:0.2,
@@ -61,6 +57,15 @@ module.exports= StyleSheet.create({
     flex:0.1,
     flexDirection:'row-reverse',
     maxWidth:'98%',
+  },
+  home_footer:{
+    flex:0.05,
+    alignSelf:'center',
+    flexDirection:'row',
+    maxWidth:'98%',
+    borderTopColor:'grey',
+    borderTopWidth:1,
+    paddingTop:10,
   },
   selection_indicator:{
     alignSelf:'flex-end',
