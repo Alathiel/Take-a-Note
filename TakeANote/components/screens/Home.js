@@ -1,11 +1,12 @@
 /* eslint-disable prettier/prettier */
 import React from 'react';
-import {View,ScrollView,TouchableWithoutFeedback,FlatList,TouchableOpacity, ActivityIndicator} from 'react-native';
+import {View,ScrollView,TouchableWithoutFeedback,FlatList,TouchableOpacity, ActivityIndicator, Image} from 'react-native';
 import {Icon,Text,SearchBar} from 'react-native-elements';
 import BackgroundTimer from 'react-native-background-timer';
 import NavigationService from '../utils/NavigationService';
 import styles from './Styles';
 import SQLite from 'react-native-sqlite-2';
+import {SketchCanvas} from '@terrylinla/react-native-sketch-canvas';
 
 const db = SQLite.openDatabase('Notes.db', '1.0', '', 1);
 var datas = [];
@@ -183,7 +184,7 @@ export default class Home extends React.Component {
         if (flag == 'add'){
             this.props.navigation.navigate('AddNote');
         }
-        else{
+        else {
             this.props.navigation.navigate('PaintNote');
         }
     }
@@ -211,6 +212,33 @@ export default class Home extends React.Component {
         }
     }
 
+    renderContent(type,content,data){
+        const srcImage = {
+            filename:'a',
+            directory: content,
+            mode: 'AspectFill',
+        };
+
+        if (type != 'image'){
+            return (<>
+                <View style={styles.title_note}><Text style={{fontSize:25}}>{type}</Text></View>
+                <View style={styles.content_note}><Text style={{fontSize:17}}>{content}</Text></View>
+                <View style={styles.footer}><Text style={{color:'grey'}}>{data}</Text></View></>
+            );
+        }
+        else {
+            return (<>
+                <SketchCanvas
+                style={{ flex: 1 }}
+                strokeColor={'red'}
+                strokeWidth={7}
+                localSourceImage={srcImage}
+ />
+                <View style={styles.footer}><Text style={{color:'grey'}}>{data}</Text></View></>
+            );
+        }
+    }
+
     renderingNotes(){
         if (load){
             if (!this.state.options){
@@ -221,9 +249,7 @@ export default class Home extends React.Component {
                             <TouchableOpacity onPress={() => this.onPress(item.id)}
                             onLongPress={() => this.longPress(item.id)} disabled={items}>
                                 <View style={{borderWidth:1,borderColor:'grey',borderRadius:10,margin:5}}>
-                                    <View style={styles.title_note}><Text style={{fontSize:25}}>{item.title}</Text></View>
-                                    <View style={styles.content_note}><Text style={{fontSize:17}}>{item.content}</Text></View>
-                                    <View style={styles.footer}><Text style={{color:'grey'}}>{item.data}</Text></View>
+                                    {this.renderContent(item.title,item.content,item.data)}
                                 </View>
                             </TouchableOpacity>
                         </View>
@@ -239,9 +265,7 @@ export default class Home extends React.Component {
                             onLongPress={() => this.longPress(item.id)}>
                                 <View style={{borderWidth:1,borderColor:'grey',borderRadius:10,margin:5}}>
                                     {this.renderSelected(item.id)}
-                                    <View style={styles.title_note}><Text style={{fontSize:25}}>{item.title}</Text></View>
-                                    <View style={styles.content_note}><Text style={{fontSize:17}}>{item.content}</Text></View>
-                                    <View style={styles.footer}><Text style={{color:'grey'}}>{item.data}</Text></View>
+                                    {this.renderContent(item.title,item.content,item.data)}
                                 </View>
                             </TouchableOpacity>
                         </View>
