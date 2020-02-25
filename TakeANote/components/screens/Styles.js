@@ -17,7 +17,7 @@ module.exports= StyleSheet.create({
   header_options: {
     // position:'relative',
     marginTop:10,
-    paddingTop:20,
+    paddingTop:25,
     minHeight:'10%',
     maxHeight:'10%',
     minWidth:'100%',
