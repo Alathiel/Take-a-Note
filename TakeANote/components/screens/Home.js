@@ -6,7 +6,6 @@ import BackgroundTimer from 'react-native-background-timer';
 import NavigationService from '../utils/NavigationService';
 import styles from './Styles';
 import SQLite from 'react-native-sqlite-2';
-import FastImage from 'react-native-fast-image';
 var RNFS = require('react-native-fs');
 
 const db = SQLite.openDatabase('Notes.db', '1.0', '', 1);
@@ -27,16 +26,13 @@ export default class Home extends React.Component {
             number:0,
             search:'',
             refresh:false,
-            imageReload:0,
         };
         this.props.navigation.addListener('willFocus', () => {
             load = false;
-            // this.reloadImages();
             this.getNotes();
         });
         this.props.navigation.addListener('didFocus', () => {
             load = false;
-            // this.reloadImages();
             this.getNotes();
         });
     }
@@ -256,7 +252,7 @@ export default class Home extends React.Component {
         else {
             return (
                 <>
-                    <Image key={this.state.imageReload} source={{uri:'file://' + content}} style={{resizeMode:'contain',borderRadius:10,minWidth:100,minHeight:330}}/>
+                    <Image source={{uri:'file://' + content}} style={{resizeMode:'contain',borderRadius:10,minWidth:100,minHeight:330}}/>
                     <View style={styles.footer}><Text style={{color:'grey'}}>{data}</Text></View>
                 </>
             );
