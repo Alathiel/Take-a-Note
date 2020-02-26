@@ -16,14 +16,15 @@ var srcImage;
 export default class AddNote extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {};
+        this.state = {
+            reload:0,
+        };
         this.props.navigation.addListener('willFocus', () => {
             if (this.props.navigation.getParam('edit')){
                 filename = this.props.navigation.getParam('title');
                 filepath = this.props.navigation.getParam('content');
                 srcImage = {
                     filename: filepath,
-                    // directory: filepath,
                     mode: 'AspectFill',
                 };
                 filepath = filepath.replace(filename,'');
@@ -32,6 +33,23 @@ export default class AddNote extends React.Component {
             else {
                 filename = String(Math.ceil(Math.random() * 100000000));
             }
+            this.forceRemount();
+        });
+        this.props.navigation.addListener('didFocus', () => {
+            if (this.props.navigation.getParam('edit')){
+                filename = this.props.navigation.getParam('title');
+                filepath = this.props.navigation.getParam('content');
+                srcImage = {
+                    filename: filepath,
+                    mode: 'AspectFill',
+                };
+                filepath = filepath.replace(filename,'');
+                filename = filename.replace('.png','');
+            }
+            else {
+                filename = String(Math.ceil(Math.random() * 100000000));
+            }
+            this.forceRemount();
         });
     }
 
@@ -52,6 +70,12 @@ export default class AddNote extends React.Component {
             },
         };
     };
+
+    forceRemount = () => {
+        this.setState(({ reload }) => ({
+          reload: reload + 1,
+        }));
+    }
 
     add(path){
         var date = new Date().getDate() + '/' + (new Date().getMonth() + 1) + '/' + new Date().getFullYear() + ' ' + new Date().getHours() + ':' + new Date().getMinutes();
@@ -78,7 +102,7 @@ export default class AddNote extends React.Component {
     renderScreen(){
         if (this.props.navigation.getParam('edit')){
             return (
-                <RNSketchCanvas containerStyle={{ backgroundColor: 'transparent', flex: 1 }} canvasStyle={{ backgroundColor: 'transparent', flex: 1 }}
+                <RNSketchCanvas key={this.state.reload} containerStyle={{ backgroundColor: 'transparent', flex: 1 }} canvasStyle={{ backgroundColor: 'transparent', flex: 1 }}
                 defaultStrokeIndex={0} defaultStrokeWidth={5} onSketchSaved={(success,filepath) => this.update(filepath)}
                 undoComponent={<View style={styles.functionButton}><Text style={{color: 'white'}}>Undo</Text></View>}
                 clearComponent={<View style={styles.functionButton}><Text style={{color: 'white'}}>Clear</Text></View>}

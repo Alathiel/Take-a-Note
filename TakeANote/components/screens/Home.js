@@ -30,12 +30,12 @@ export default class Home extends React.Component {
         };
         this.props.navigation.addListener('willFocus', () => {
             load = false;
-            this.reloadImages();
+            // this.reloadImages();
             this.getNotes();
         });
         this.props.navigation.addListener('didFocus', () => {
             load = false;
-            this.reloadImages();
+            // this.reloadImages();
             this.getNotes();
         });
     }
