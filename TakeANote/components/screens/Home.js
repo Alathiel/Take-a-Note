@@ -26,13 +26,16 @@ export default class Home extends React.Component {
             number:0,
             search:'',
             refresh:false,
+            imageReload:0,
         };
         this.props.navigation.addListener('willFocus', () => {
             load = false;
+            this.reloadImages();
             this.getNotes();
         });
         this.props.navigation.addListener('didFocus', () => {
             load = false;
+            this.reloadImages();
             this.getNotes();
         });
     }
@@ -73,6 +76,12 @@ export default class Home extends React.Component {
     reloadSelected = () => {
         this.setState(({ number }) => ({
             number: number + 1,
+        }));
+    }
+
+    reloadImages = () => {
+        this.setState(({ imageReload }) => ({
+            imageReload: imageReload + 1,
         }));
     }
 
@@ -174,7 +183,13 @@ export default class Home extends React.Component {
         }
         else {
             load = false;
-            this.props.navigation.navigate('ShowNote',{id: id});
+            var check = datas.filter(datas => datas.id == id);
+            if (check[0].title.includes('.png')){
+                this.props.navigation.navigate('PaintNote',{id: id,edit:true,title:check[0].title,content:check[0].content});
+            }
+            else {
+                this.props.navigation.navigate('ShowNote',{id: id});
+            }
         }
     }
 
@@ -213,13 +228,7 @@ export default class Home extends React.Component {
     }
 
     renderContent(type,content,data){
-        const srcImage = {
-            filename:'a',
-            directory: content,
-            mode: 'AspectFill',
-        };
-
-        if (type != 'image'){
+        if (!type.includes('.png')){
             return (<>
                 <View style={styles.title_note}><Text style={{fontSize:25}}>{type}</Text></View>
                 <View style={styles.content_note}><Text style={{fontSize:17}}>{content}</Text></View>
@@ -227,14 +236,11 @@ export default class Home extends React.Component {
             );
         }
         else {
-            return (<>
-                <SketchCanvas
-                style={{ flex: 1 }}
-                strokeColor={'red'}
-                strokeWidth={7}
-                localSourceImage={srcImage}
- />
-                <View style={styles.footer}><Text style={{color:'grey'}}>{data}</Text></View></>
+            return (
+                <>
+                    <Image key={this.state.imageReload} source={{uri:'file://' + content}} style={{resizeMode:'contain',borderRadius:10,minWidth:100,minHeight:330}}/>
+                    <View style={styles.footer}><Text style={{color:'grey'}}>{data}</Text></View>
+                </>
             );
         }
     }

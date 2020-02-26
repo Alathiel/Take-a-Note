@@ -9,16 +9,29 @@ import RNSketchCanvas from '@terrylinla/react-native-sketch-canvas';
 
 const db = SQLite.openDatabase('Notes.db', '1.0', '', 1);
 var filename;
+var filepath;
+var id;
+var srcImage;
 
 export default class AddNote extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {
-            title:'',
-            content:'',
-        };
-        this.props.navigation.addListener('didFocus', () => {
-            filename = String(Math.ceil(Math.random() * 100000000));
+        this.state = {};
+        this.props.navigation.addListener('willFocus', () => {
+            if (this.props.navigation.getParam('edit')){
+                filename = this.props.navigation.getParam('title');
+                filepath = this.props.navigation.getParam('content');
+                srcImage = {
+                    filename: filepath,
+                    // directory: filepath,
+                    mode: 'AspectFill',
+                };
+                filepath = filepath.replace(filename,'');
+                filename = filename.replace('.png','');
+            }
+            else {
+                filename = String(Math.ceil(Math.random() * 100000000));
+            }
         });
     }
 
@@ -44,7 +57,15 @@ export default class AddNote extends React.Component {
         var date = new Date().getDate() + '/' + (new Date().getMonth() + 1) + '/' + new Date().getFullYear() + ' ' + new Date().getHours() + ':' + new Date().getMinutes();
 
         db.transaction(function (txn) {
-            txn.executeSql('INSERT INTO Notes (title,content,data) VALUES ("image","' + path + '","' + date + '")',[]);
+            txn.executeSql('INSERT INTO Notes (title,content,data) VALUES ("' + filename + '.png","' + path + '","' + date + '")',[]);
+        });
+        this.props.navigation.navigate('Home');
+    }
+
+    update(){
+        var date = new Date().getDate() + '/' + (new Date().getMonth() + 1) + '/' + new Date().getFullYear() + ' ' + new Date().getHours() + ':' + new Date().getMinutes();
+        db.transaction(function (txn) {
+            txn.executeSql('UPDATE Notes SET title="' + filename + '" , content="' + filepath + '", data="' + date + '" WHERE id=' + id,[]);
         });
         this.props.navigation.navigate('Home');
     }
@@ -54,39 +75,80 @@ export default class AddNote extends React.Component {
         return true;
     }
 
+    renderScreen(){
+        if (this.props.navigation.getParam('edit')){
+            return (
+                <RNSketchCanvas containerStyle={{ backgroundColor: 'transparent', flex: 1 }} canvasStyle={{ backgroundColor: 'transparent', flex: 1 }}
+                defaultStrokeIndex={0} defaultStrokeWidth={5} onSketchSaved={(success,filepath) => this.update(filepath)}
+                undoComponent={<View style={styles.functionButton}><Text style={{color: 'white'}}>Undo</Text></View>}
+                clearComponent={<View style={styles.functionButton}><Text style={{color: 'white'}}>Clear</Text></View>}
+                eraseComponent={<View style={styles.functionButton}><Text style={{color: 'white'}}>Eraser</Text></View>}
+                localSourceImage={srcImage}
+                strokeComponent={color => (
+                <View style={[{ backgroundColor: color }, styles.strokeColorButton]} />
+                )}
+                strokeSelectedComponent={(color, index, changed) => {
+                    return (
+                        <View style={[{ backgroundColor: color, borderWidth: 2 }, styles.strokeColorButton]} />
+                    );
+                }}
+                strokeWidthComponent={(w) => {
+                    return (
+                        <View style={styles.strokeWidthButton}>
+                            <View  style={{backgroundColor: 'white', marginHorizontal: 2.5, width: Math.sqrt(w / 3) * 10,height: Math.sqrt(w / 3) * 10, borderRadius: Math.sqrt(w / 3) * 10 / 2}} />
+                        </View>
+                    );}
+                }
+                saveComponent={<View style={styles.functionButton}><Text style={{color: 'white'}}>Save</Text></View>}
+                savePreference={() => {
+                    return {
+                        folder: 'RNSketchCanvas',
+                        filename: filename,
+                        transparent: false,
+                        imageType: 'png',
+                    };
+                }}/>
+            );
+        }
+        else {
+            return (
+                <RNSketchCanvas containerStyle={{ backgroundColor: 'transparent', flex: 1 }} canvasStyle={{ backgroundColor: 'transparent', flex: 1 }}
+                defaultStrokeIndex={0} defaultStrokeWidth={5} onSketchSaved={(success,filepath) => this.add(filepath)}
+                undoComponent={<View style={styles.functionButton}><Text style={{color: 'white'}}>Undo</Text></View>}
+                clearComponent={<View style={styles.functionButton}><Text style={{color: 'white'}}>Clear</Text></View>}
+                eraseComponent={<View style={styles.functionButton}><Text style={{color: 'white'}}>Eraser</Text></View>}
+                strokeComponent={color => (
+                <View style={[{ backgroundColor: color }, styles.strokeColorButton]} />
+                )}
+                strokeSelectedComponent={(color, index, changed) => {
+                    return (
+                        <View style={[{ backgroundColor: color, borderWidth: 2 }, styles.strokeColorButton]} />
+                    );
+                }}
+                strokeWidthComponent={(w) => {
+                    return (
+                        <View style={styles.strokeWidthButton}>
+                            <View  style={{backgroundColor: 'white', marginHorizontal: 2.5, width: Math.sqrt(w / 3) * 10,height: Math.sqrt(w / 3) * 10, borderRadius: Math.sqrt(w / 3) * 10 / 2}} />
+                        </View>
+                    );}
+                }
+                saveComponent={<View style={styles.functionButton}><Text style={{color: 'white'}}>Save</Text></View>}
+                savePreference={() => {
+                    return {
+                        folder: 'RNSketchCanvas',
+                        filename: filename,
+                        transparent: false,
+                        imageType: 'png',
+                    };
+                }}/>
+            );
+        }
+    }
+
     render() {
       return (
         <View style={styles.MainContainer}>
-            <RNSketchCanvas containerStyle={{ backgroundColor: 'transparent', flex: 1 }} canvasStyle={{ backgroundColor: 'transparent', flex: 1 }}
-            defaultStrokeIndex={0} defaultStrokeWidth={5} onSketchSaved={(success,filepath) => this.add(filepath)}
-            undoComponent={<View style={styles.functionButton}><Text style={{color: 'white'}}>Undo</Text></View>}
-            clearComponent={<View style={styles.functionButton}><Text style={{color: 'white'}}>Clear</Text></View>}
-            eraseComponent={<View style={styles.functionButton}><Text style={{color: 'white'}}>Eraser</Text></View>}
-            strokeComponent={color => (
-              <View style={[{ backgroundColor: color }, styles.strokeColorButton]} />
-            )}
-            strokeSelectedComponent={(color, index, changed) => {
-                return (
-                    <View style={[{ backgroundColor: color, borderWidth: 2 }, styles.strokeColorButton]} />
-                );
-            }}
-            strokeWidthComponent={(w) => {
-                return (
-                    <View style={styles.strokeWidthButton}>
-                        <View  style={{backgroundColor: 'white', marginHorizontal: 2.5, width: Math.sqrt(w / 3) * 10,height: Math.sqrt(w / 3) * 10, borderRadius: Math.sqrt(w / 3) * 10 / 2}} />
-                    </View>
-                );}
-            }
-            saveComponent={<View style={styles.functionButton}><Text style={{color: 'white'}}>Save</Text></View>}
-            savePreference={() => {
-                return {
-                    folder: 'RNSketchCanvas',
-                    filename: filename,
-                    transparent: false,
-                    imageType: 'png',
-                };
-            }}
-          />
+            {this.renderScreen()}
         </View>
       );
     }
