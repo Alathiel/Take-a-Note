@@ -249,7 +249,7 @@ export default class Home extends React.Component {
         if (load){
             if (!this.state.options){
                 return (
-                    <FlatList data={datas} numColumns={2} keyExtractor={(item, index) => index.toString()}
+                    <FlatList data={datas} key={this.state.reload} numColumns={2} keyExtractor={(item, index) => index.toString()}
                     renderItem={({item}) => (
                         <View style={{ flex: 1, flexDirection: 'column', margin: 1 }}>
                             <TouchableOpacity onPress={() => this.onPress(item.id)}
@@ -264,7 +264,7 @@ export default class Home extends React.Component {
             }
             else {
                 return (
-                    <FlatList data={datas} numColumns={2} keyExtractor={(item, index) => index.toString()}
+                    <FlatList data={datas} key={this.state.reload} numColumns={2} keyExtractor={(item, index) => index.toString()}
                     renderItem={({item}) => (
                         <View style={{ flex: 1, flexDirection: 'column', margin: 1 }}>
                             <TouchableOpacity onPress={() => this.onPress(item.id)} disabled={items}
@@ -295,7 +295,7 @@ export default class Home extends React.Component {
                 <View style={styles.header_options}>
                     {this.renderingOptions()}
                 </View>
-                <ScrollView key={this.state.reload} locked={true} style={styles.notes_container}>
+                <ScrollView locked={true} style={styles.notes_container}>
                     {this.renderingNotes()}
                 </ScrollView>
                 <View style={styles.home_footer}>
