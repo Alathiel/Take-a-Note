@@ -15,9 +15,8 @@ module.exports= StyleSheet.create({
     alignContent:'center',
   },
   header_options: {
-    marginTop:10,
-    minHeight:'10%',
-    maxHeight:'10%',
+    minHeight:'8%',
+    maxHeight:'8%',
     minWidth:'100%',
     backgroundColor:'transparent',
     shadowColor: 'transparent',

@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 import React from 'react';
-import {View,ScrollView,TouchableWithoutFeedback,FlatList,TouchableOpacity, ActivityIndicator, Image} from 'react-native';
+import {View,ScrollView,TouchableWithoutFeedback,FlatList,TouchableOpacity,ActivityIndicator,Image} from 'react-native';
 import {Icon,Text,SearchBar} from 'react-native-elements';
 import BackgroundTimer from 'react-native-background-timer';
 import NavigationService from '../utils/NavigationService';
