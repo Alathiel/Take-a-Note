@@ -20,9 +20,6 @@ export default class AddNote extends React.Component {
     static navigationOptions = ({ navigation }) => {
         return {
             headerTitle:'Add a Note',
-            // headerRight: ()=>(
-            //     {}
-            // ),
             headerStyle: {
                 backgroundColor: 'rgba(52, 52, 52, 0.0)',
                 shadowColor: 'transparent',
