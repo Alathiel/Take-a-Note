@@ -6,7 +6,7 @@ import BackgroundTimer from 'react-native-background-timer';
 import NavigationService from '../utils/NavigationService';
 import styles from './Styles';
 import SQLite from 'react-native-sqlite-2';
-import {SketchCanvas} from '@terrylinla/react-native-sketch-canvas';
+var RNFS = require('react-native-fs');
 
 const db = SQLite.openDatabase('Notes.db', '1.0', '', 1);
 var datas = [];
@@ -50,6 +50,16 @@ export default class Home extends React.Component {
         const timeoutId = BackgroundTimer.setTimeout(() => {this.getNotes();}, 200);
         const timeoutId2 = BackgroundTimer.setTimeout(() => {this.getNotes();}, 1000);
     }
+
+    deleteImageFile(filepath) {
+        RNFS.exists(filepath).then( (result) => {
+            console.log("file exists: ", result);
+
+            if (result){
+                return RNFS.unlink(filepath);
+            }
+        }).catch((err) => {console.log(err.message);});
+      }
 
     getNotes(){
         db.transaction(function (txn) {
@@ -140,6 +150,13 @@ export default class Home extends React.Component {
         selected.forEach(element => {
             db.transaction(function (txn) {
                 txn.executeSql('Delete from Notes where id=' + element,[]);
+            });
+
+            var check = datas.filter(datas => datas.id == element);
+            check.forEach(data => {
+                if (data.title.includes('.png')){
+                    this.deleteImageFile(data.content);
+                }
             });
             datas = datas.filter(datas => datas.id !== element);
         });
