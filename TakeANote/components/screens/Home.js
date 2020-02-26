@@ -6,6 +6,7 @@ import BackgroundTimer from 'react-native-background-timer';
 import NavigationService from '../utils/NavigationService';
 import styles from './Styles';
 import SQLite from 'react-native-sqlite-2';
+import FastImage from 'react-native-fast-image';
 var RNFS = require('react-native-fs');
 
 const db = SQLite.openDatabase('Notes.db', '1.0', '', 1);
@@ -59,7 +60,7 @@ export default class Home extends React.Component {
                 return RNFS.unlink(filepath);
             }
         }).catch((err) => {console.log(err.message);});
-      }
+    }
 
     getNotes(){
         db.transaction(function (txn) {
@@ -119,7 +120,7 @@ export default class Home extends React.Component {
         }
         else {
             return (
-                <View style={{flexDirection:'row',alignSelf:'center'}}>
+                <View style={{flexDirection:'row',alignSelf:'center',backgroundColor:'rgba(52, 52, 52, 0.0)',}}>
                     <SearchBar lightTheme round placeholder="Type Here..." onChangeText={(title) => this.search(title)}
                     value={this.state.search} onClear={this.cleared()} containerStyle={styles.search_input} onFocus={() => items=true} onBlur={() => items=false}/>
                     <Icon name='settings' type='material-icons' color='black' containerStyle={{paddingTop:20,paddingLeft:30}} onPress={() =>  this.props.navigation.navigate('Settings')}/>
@@ -268,7 +269,7 @@ export default class Home extends React.Component {
                 return (
                     <FlatList data={datas} key={this.state.reload} numColumns={2} keyExtractor={(item, index) => index.toString()}
                     renderItem={({item}) => (
-                        <View style={{ flex: 1, flexDirection: 'column', margin: 1 }}>
+                        <View style={{ flex: 1, flexDirection: 'column', margin: 1}}>
                             <TouchableOpacity onPress={() => this.onPress(item.id)}
                             onLongPress={() => this.longPress(item.id)} disabled={items}>
                                 <View style={{borderWidth:1,borderColor:'grey',borderRadius:10,margin:5}}>
@@ -283,7 +284,7 @@ export default class Home extends React.Component {
                 return (
                     <FlatList data={datas} key={this.state.reload} numColumns={2} keyExtractor={(item, index) => index.toString()}
                     renderItem={({item}) => (
-                        <View style={{ flex: 1, flexDirection: 'column', margin: 1 }}>
+                        <View style={{ flex: 1, flexDirection: 'column', margin: 1}}>
                             <TouchableOpacity onPress={() => this.onPress(item.id)} disabled={items}
                             onLongPress={() => this.longPress(item.id)}>
                                 <View style={{borderWidth:1,borderColor:'grey',borderRadius:10,margin:5}}>

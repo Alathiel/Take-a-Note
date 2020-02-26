@@ -19,7 +19,7 @@ module.exports= StyleSheet.create({
     minHeight:'10%',
     maxHeight:'10%',
     minWidth:'100%',
-    backgroundColor:'rgba(52, 52, 52, 0.0)',
+    backgroundColor:'transparent',
     shadowColor: 'transparent',
     borderWidth: 0,
     shadowOpacity: 0,
@@ -30,6 +30,7 @@ module.exports= StyleSheet.create({
     flexDirection:'row',
     paddingTop:10,
     minWidth:'100%',
+    backgroundColor:'transparent',
   },
   search_input:{
     paddingTop:'3%',

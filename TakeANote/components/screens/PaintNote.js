@@ -10,7 +10,6 @@ import RNSketchCanvas from '@terrylinla/react-native-sketch-canvas';
 const db = SQLite.openDatabase('Notes.db', '1.0', '', 1);
 var filename;
 var filepath;
-var id;
 var srcImage;
 
 export default class AddNote extends React.Component {
@@ -86,10 +85,11 @@ export default class AddNote extends React.Component {
         this.props.navigation.navigate('Home');
     }
 
-    update(){
+    update(path){
+        var id = this.props.navigation.getParam('id');
         var date = new Date().getDate() + '/' + (new Date().getMonth() + 1) + '/' + new Date().getFullYear() + ' ' + new Date().getHours() + ':' + new Date().getMinutes();
         db.transaction(function (txn) {
-            txn.executeSql('UPDATE Notes SET title="' + filename + '" , content="' + filepath + '", data="' + date + '" WHERE id=' + id,[]);
+            txn.executeSql('UPDATE Notes SET title="' + filename + '.png" , content="' + path + '", data="' + date + '" WHERE id=' + id,[]);
         });
         this.props.navigation.navigate('Home');
     }
