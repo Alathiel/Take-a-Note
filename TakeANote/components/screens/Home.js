@@ -48,14 +48,16 @@ export default class Home extends React.Component {
         const timeoutId2 = BackgroundTimer.setTimeout(() => {this.getNotes();}, 1000);
     }
 
-    deleteImageFile(filepath) {
-        RNFS.exists(filepath).then( (result) => {
-            console.log("file exists: ", result);
+    forceRemount = () => {
+        this.setState(({ reload }) => ({
+          reload: reload + 1,
+        }));
+    }
 
-            if (result){
-                return RNFS.unlink(filepath);
-            }
-        }).catch((err) => {console.log(err.message);});
+    reloadSelected = () => {
+        this.setState(({ number }) => ({
+            number: number + 1,
+        }));
     }
 
     getNotes(){
@@ -74,55 +76,9 @@ export default class Home extends React.Component {
         load = true;
     }
 
-    forceRemount = () => {
-        this.setState(({ reload }) => ({
-          reload: reload + 1,
-        }));
-    }
-
-    reloadSelected = () => {
-        this.setState(({ number }) => ({
-            number: number + 1,
-        }));
-    }
-
-    reloadImages = () => {
-        this.setState(({ imageReload }) => ({
-            imageReload: imageReload + 1,
-        }));
-    }
-
     cancel(){
         this.setState({options:false});
         selected = selected.filter(selected => selected == null);
-    }
-
-    renderingOptions(){
-        var length = selected.length;
-        if (length == 0)
-        {
-            length = '';
-        }
-
-        if (this.state.options){
-            return (
-
-                <View style={styles.header_elements}>
-                    <Icon name='close' type='material-community' containerStyle={{padding:10}} onPress={() => this.cancel()}/>
-                    <Text key={this.state.number} style={{fontWeight:'bold',paddingTop:9,fontSize:20}}>{length}</Text>
-                    <Icon name='delete' type='material-community' color='grey' containerStyle={{padding:10}} onPress={() => this.delete()}/>
-                </View>
-            );
-        }
-        else {
-            return (
-                <View style={{flexDirection:'row',alignSelf:'center',backgroundColor:'rgba(52, 52, 52, 0.0)',}}>
-                    <SearchBar lightTheme round placeholder="Type Here..." onChangeText={(title) => this.search(title)}
-                    value={this.state.search} onClear={this.cleared()} containerStyle={styles.search_input} onFocus={() => items=true} onBlur={() => items=false}/>
-                    <Icon name='settings' type='material-icons' color='black' containerStyle={{paddingTop:20,paddingLeft:30}} onPress={() =>  this.props.navigation.navigate('Settings')}/>
-                </View>
-            );
-        }
     }
 
     search(title){
@@ -141,6 +97,16 @@ export default class Home extends React.Component {
             this.getNotes();
             this.setState({refresh:false});
         }
+    }
+
+    deleteImageFile(filepath) {
+        RNFS.exists(filepath).then( (result) => {
+            console.log("file exists: ", result);
+
+            if (result){
+                return RNFS.unlink(filepath);
+            }
+        }).catch((err) => {console.log(err.message);});
     }
 
     delete(){
@@ -215,6 +181,34 @@ export default class Home extends React.Component {
         }
         else {
             this.props.navigation.navigate('PaintNote');
+        }
+    }
+
+    renderingOptions(){
+        var length = selected.length;
+        if (length == 0)
+        {
+            length = '';
+        }
+
+        if (this.state.options){
+            return (
+
+                <View style={styles.header_elements}>
+                    <Icon name='close' type='material-community' containerStyle={{padding:10}} onPress={() => this.cancel()}/>
+                    <Text key={this.state.number} style={{fontWeight:'bold',paddingTop:9,fontSize:20}}>{length}</Text>
+                    <Icon name='delete' type='material-community' color='grey' containerStyle={{padding:10}} onPress={() => this.delete()}/>
+                </View>
+            );
+        }
+        else {
+            return (
+                <View style={{flexDirection:'row',alignSelf:'center',backgroundColor:'rgba(52, 52, 52, 0.0)',}}>
+                    <SearchBar lightTheme round placeholder="Type Here..." onChangeText={(title) => this.search(title)}
+                    value={this.state.search} onClear={this.cleared()} containerStyle={styles.search_input} onFocus={() => items=true} onBlur={() => items=false}/>
+                    <Icon name='settings' type='material-icons' color='black' containerStyle={{paddingTop:20,paddingLeft:30}} onPress={() =>  this.props.navigation.navigate('Settings')}/>
+                </View>
+            );
         }
     }
 
