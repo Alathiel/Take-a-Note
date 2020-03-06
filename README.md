@@ -6,6 +6,9 @@ App to saves notes.
 
 |Works | To Add        | To Fix        |
 |------| ------------- |:-------------:|
-|Save Notes|           |               |
+|Save Notes|           |Reload drawings after edit|
 |Edit Notes|           |               |
 |See Notes|            |               |
+|Draw a Note|          |               |
+
+![](Readme_Gif.gif)
