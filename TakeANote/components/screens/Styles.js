@@ -13,6 +13,7 @@ module.exports= StyleSheet.create({
     maxWidth:'100%',
     justifyContent:'center',
     alignContent:'center',
+    flexWrap:'wrap',
   },
   header_options: {
     minHeight:'8%',

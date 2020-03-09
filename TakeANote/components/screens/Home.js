@@ -6,15 +6,13 @@ import BackgroundTimer from 'react-native-background-timer';
 import NavigationService from '../utils/NavigationService';
 import styles from './Styles';
 import SQLite from 'react-native-sqlite-2';
-var RNFS = require('react-native-fs');
+import deleteFile from '../utils/deleteFile';
 
 const db = SQLite.openDatabase('Notes.db', '1.0', '', 1);
 var datas = [];
 var selected = [];
 var load = false;
 var items = false;
-
-
 
 export default class Home extends React.Component {
     constructor(props) {
@@ -29,11 +27,11 @@ export default class Home extends React.Component {
         };
         this.props.navigation.addListener('willFocus', () => {
             load = false;
-            this.getNotes();
+            this.sync();
         });
         this.props.navigation.addListener('didFocus', () => {
             load = false;
-            this.getNotes();
+            this.sync();
         });
     }
 
@@ -44,8 +42,8 @@ export default class Home extends React.Component {
     };
 
     componentWillMount(){ //first load
-        const timeoutId = BackgroundTimer.setTimeout(() => {this.getNotes();}, 200);
-        const timeoutId2 = BackgroundTimer.setTimeout(() => {this.getNotes();}, 1000);
+        const timeoutId = BackgroundTimer.setTimeout(() => {this.sync();}, 200);
+        const timeoutId2 = BackgroundTimer.setTimeout(() => {this.sync();}, 1000);
     }
 
     forceRemount = () => {
@@ -60,7 +58,7 @@ export default class Home extends React.Component {
         }));
     }
 
-    getNotes(){
+    sync(){
         db.transaction(function (txn) {
             txn.executeSql('SELECT * FROM Notes', [], function (tx, res) {
                 var len = res.rows.length;
@@ -94,19 +92,9 @@ export default class Home extends React.Component {
     cleared(){
         items = false;
         if (this.state.refresh){
-            this.getNotes();
+            this.sync();
             this.setState({refresh:false});
         }
-    }
-
-    deleteImageFile(filepath) {
-        RNFS.exists(filepath).then( (result) => {
-            console.log("file exists: ", result);
-
-            if (result){
-                return RNFS.unlink(filepath);
-            }
-        }).catch((err) => {console.log(err.message);});
     }
 
     delete(){
@@ -118,7 +106,7 @@ export default class Home extends React.Component {
             var check = datas.filter(datas => datas.id == element);
             check.forEach(data => {
                 if (data.title.includes('.png')){
-                    this.deleteImageFile(data.content);
+                    deleteFile(data.content);
                 }
             });
             datas = datas.filter(datas => datas.id !== element);
